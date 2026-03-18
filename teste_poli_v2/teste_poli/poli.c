@@ -91,9 +91,66 @@ polinomio * poli_mult(polinomio *p, polinomio *q){
 }
 
 polinomio * poli_div(polinomio *p, polinomio *q){
+    // printf("p->grau: %d, q->grau: %d\n", p->grau, q->grau);
+    // printf("coeficientes de p: ");
+    // for (int i = 0; i <= p->grau; i++) {
+    //     printf("%d ", p->coeficientes[i]);
+    // }
+    // printf("\n");
     // TODO: Implemente aqui a solucao para operacao que divide dois polinomios e gera um terceiro
+    polinomio *r = poli_create(p->grau - q->grau);
 
-    return NULL;
+    poli_ins_termo(r, p->grau - q->grau, p->coeficientes[p->grau] / q->coeficientes[q->grau]);
+    //r->coeficientes[p->grau - q->grau] = p->coeficientes[p->grau] / q->coeficientes[q->grau];
+    //int primeiro_coef_grau = p->grau - q->grau;
+
+    int grau_s = (p->grau - q->grau) + q->grau;  
+    polinomio *s = poli_create(grau_s); 
+
+    int coef = 0;
+
+    for (int i = 0; i <= q->grau; i++) {
+        int coef_r;
+        poli_get_termo(r, p->grau - q->grau, &coef_r);
+        //coef = r->coeficientes[p->grau - q->grau] * q->coeficientes[i];
+        coef = coef_r * q->coeficientes[i];
+        poli_ins_termo(s, r->grau + i, coef);
+    }
+
+    // polinomio *t = poli_create(grau_t);
+    polinomio *t = poli_create(p->grau); // grau do resto nunca pode ser maior que o grau de p
+    	
+    for (int k = 0; k <= p->grau; k++) {
+        int coef_p = (k<=p->grau) ? p->coeficientes[k] : 0;
+        int coef_s = (k<=s->grau) ? s->coeficientes[k] : 0;
+        int subtrair = coef_p - coef_s;
+
+        poli_ins_termo(t, k, subtrair); 
+    }
+
+    t->grau = 0;
+    for (int j = p->grau; j >= 0; j--) {
+        if (t->coeficientes[j] != 0) {
+            t->grau = j;
+            break;
+        }
+    }
+
+    // printf("coeficientes de t: ");
+    // for (int i = 0; i <= t->grau; i++) {
+    //     printf("%d ", t->coeficientes[i]);
+    // }
+    // printf("\n");
+
+    // for (int l = 0; l < (p->grau - q->grau); l++) {
+    //     poli_ins_termo(r, l, r->coeficientes[p->grau - q->grau]); // vai montando o polinomio final
+    // }
+
+    if (t->grau >= q->grau) {
+        return poli_soma(r, poli_div(t, q));
+    }
+
+    return r;
 }
 
 
