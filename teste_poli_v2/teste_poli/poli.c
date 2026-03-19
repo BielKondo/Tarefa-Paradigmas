@@ -145,11 +145,14 @@ polinomio * poli_div(polinomio *p, polinomio *q){
     // for (int l = 0; l < (p->grau - q->grau); l++) {
     //     poli_ins_termo(r, l, r->coeficientes[p->grau - q->grau]); // vai montando o polinomio final
     // }
-
+    poli_destroy(&s);
     if (t->grau >= q->grau) {
-        return poli_soma(r, poli_div(t, q));
+        polinomio *final = poli_soma(r, poli_div(t, q));
+        poli_destroy(&t);
+        return final;
     }
 
+    poli_destroy(&t);
     return r;
 }
 
