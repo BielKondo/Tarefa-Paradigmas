@@ -1,3 +1,6 @@
+// 10436238 - Gabriel Hideaquy Kondo
+// 10440034 - João Pedro Sinzato Bocchini
+
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -147,7 +150,10 @@ polinomio * poli_div(polinomio *p, polinomio *q){
     // }
     poli_destroy(&s);
     if (t->grau >= q->grau) {
-        polinomio *final = poli_soma(r, poli_div(t, q));
+        polinomio *div_resultado = poli_div(t, q);
+        polinomio *final = poli_soma(r, div_resultado);
+        poli_destroy(&div_resultado);
+        poli_destroy(&r);
         poli_destroy(&t);
         return final;
     }
